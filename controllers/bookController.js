@@ -56,11 +56,15 @@ exports.getHomeBooksController = async (req,res)=>{
 // get all books-login  user
 exports.getUserAllBookPageController = async (req,res)=>{
     console.log("Inside getUserAllBookPageController");
+    // query from request
+        const searchKey = req.query.search 
+      console.log(searchKey);
+        
     // login user mail from token
      const loginUserMail = req.payload
    try{
         // get all books from db expect loggin user
-        const allBooks = await books.find({sellerMail:{$ne:loginUserMail}})
+        const allBooks = await books.find({sellerMail:{$ne:loginUserMail},title:{$regex:searchKey,$options:'i'}})
         res.status(200).json(allBooks)
        
     }catch(error){
@@ -104,7 +108,7 @@ exports.getUserBoughtBookProfilePageBookController = async (req,res)=>{
      const loginUserMail = req.payload
    try{
         // get all purchasedbook 
-        const allUserPurchaseBooks = await books.find({buyerMail:{loginUserMail}})
+        const allUserPurchaseBooks = await books.find({buyerMail:loginUserMail})
         res.status(200).json(allUserPurchaseBooks)
        
     }catch(error){
@@ -116,6 +120,22 @@ exports.getUserBoughtBookProfilePageBookController = async (req,res)=>{
     
    
   
+}
+
+// .........................................view book controller.......................................
+exports.viewBookController = async (req,res)=>{
+    console.log("Inside ViewBookController");
+    // get book id from req params
+    const {id} = req.params
+    try{
+        // get book details from db
+        const bookDetails = await books.findById({_id:id})
+        res.status(200).json(bookDetails)
+    }
+    catch(error){
+         console.log(error);
+        res.status(500).json(error)
+    }
 }
 
 
