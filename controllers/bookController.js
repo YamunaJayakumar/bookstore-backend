@@ -6,7 +6,7 @@ exports.addBookController = async (req,res)=>{
      
     // get book details from request req body , upload files from request files & seller mail from req payload
     const {title,author,pages,price,discountPrice,imageURL,abstract,language,publisher,isbn,category} = req.body
-    const uploadImages = req.files.map(item=>item.filename)
+    const uploadImages = req.files?.map(item=>item.filename)
     const sellerMail = req.payload
     console.log(title,author,pages,price,discountPrice,imageURL,abstract,language,publisher,isbn,category,uploadImages,sellerMail);
     try{
