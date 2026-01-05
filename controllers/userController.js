@@ -9,6 +9,7 @@ exports.registerController = async(req,res)=>{
     try{
         // check mail in model
         const existingUser = await users.findOne({email})
+        
         if(existingUser){
             res.status(409).json("User Already exist!!! Please Login...")
             
@@ -32,12 +33,14 @@ exports.registerController = async(req,res)=>{
 // login api
 
 exports.loginController = async(req,res)=>{
-    console.log("Inside Register controller");
+    console.log("Inside login controller");
     const {email,password}=req.body
     console.log(email,password);
     try{
         // check mail in model
         const existingUser = await users.findOne({email})
+        console.log(existingUser);
+        
         if(existingUser){
             if(password == existingUser.password)
             {
@@ -120,3 +123,22 @@ exports.updateUserProfileController=async (req,res)=>{
     
 }
 // admin edit profile
+// get all users by admin
+exports.getAllUsersController = async (req,res)=>{
+    console.log("Inside getAllUsersController");
+   try{
+        // get all books from db 
+        const allUsers = await users.find({role:{$ne:"admin"}})
+        res.status(200).json(allUsers)
+       
+    }catch(error){
+        console.log(error);
+        res.status(500).json(error)
+        
+    }
+    
+    
+   
+  
+}
+

@@ -5,6 +5,7 @@ const userController = require('../controllers/userController')
 const bookController = require('../controllers/bookController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerMiddleware = require('../middlewares/multerMiddleware')
+const AdminMiddleware=require('../middlewares/AdminMiddleware')
 // create router object
 const router = new express.Router()
 
@@ -30,14 +31,28 @@ router.get('/books/all',jwtMiddleware,bookController.getUserAllBookPageControlle
 
 // get all user uploaded books page
 
-router.get('/user-books/all',jwtMiddleware,bookController.getUserUploadedBookProfilePageBookController)
+router.get('/user-books/bought',jwtMiddleware,bookController.getUserUploadedBookProfilePageBookController)
 
-// get all user bought book pages
-router.get('/user-books/all',jwtMiddleware,bookController.getUserUploadedBookProfilePageBookController)
+
 // get single- view book details
 router.get('/books/:id/view',jwtMiddleware,bookController.viewBookController)
 
 // user edit - request body content is form data
 router.put('/user/:id/edit',jwtMiddleware,multerMiddleware.single('picture'),userController.updateUserProfileController)
 
+// delete book
+router.delete('/books/:id',jwtMiddleware,bookController.deleteBookController)
+// get payment
+router.put('/books/:id/buy',jwtMiddleware,bookController.bookPaymentController)
+
+//---------------------------authorised admin------------------
+
+//get all books 
+router.get('/admin-books/all',AdminMiddleware,bookController.getAllBooksController)
+
+//get all users
+router.get('/admin-users/all',AdminMiddleware,userController.getAllUsersController)
+
+//update books by admin
+router.put('/books/:id/update',AdminMiddleware,bookController.updateBookStatusController)
 module.exports=router
